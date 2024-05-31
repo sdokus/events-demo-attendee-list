@@ -121,6 +121,6 @@ class Plugin {
 	 * @return void
 	 */
 	public function load(): void {
-	// Once I modularize the plugin, this will act as the router
+		Shortcode\Attendee_List::get_instance();
 	}
 }
