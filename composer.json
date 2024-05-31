@@ -1,0 +1,19 @@
+{
+  "name": "sdokus/events-demo-attendee-list",
+  "description": "A TEC Demo WordPress plugin by Sami Dokus",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0",
+  "autoload": {
+    "psr-4": {
+      "Sdokus\\Attendee_List\\": "src/Demo_Attendee_List"
+    }
+  },
+  "minimum-stability": "dev",
+  "require": {},
+  "config": {
+    "preferred-install": "dist",
+    "platform": {
+      "php": "8.0"
+    }
+  }
+}
