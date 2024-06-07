@@ -29,11 +29,50 @@ class Attendee_List extends Singleton_Abstract {
 	 * @return void
 	 */
 	public function register_assets(): void {
-		tribe_asset(
-			Plugin::get_instance(),
-			'demo-attendee-list-shortcode',
-			Plugin::get_instance()->plugin_url . 'src/resources/js/demo-attendee-list-shortcode.js'
+		wp_register_style(
+			'sdokus-attendee-list-demo-shortcode-style',
+			Plugin::get_instance()->plugin_url . 'src/resources/css/demo-attendee-list-shortcode.css',
+			[],
+			Plugin::VERSION
 		);
+
+		wp_register_script(
+			'sdokus-attendee-list-demo-shortcode',
+			Plugin::get_instance()->plugin_url . 'src/resources/js/demo-attendee-list-shortcode.js',
+			[ 'jquery', 'wp-i18n' ],
+			Plugin::VERSION,
+			true
+		);
+	}
+
+	/**
+	 * Enqueues the assets for the Attendee List Demo Shortcode style and functionality.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	protected function enqueue_assets(): void {
+		wp_enqueue_script( 'sdokus-attendee-list-demo-shortcode' );
+        wp_enqueue_style( 'sdokus-attendee-list-demo-shortcode-style' );
+
+		// Localize script with nonce to MyAjax object
+		wp_localize_script(
+			'sdokus-attendee-list-demo-shortcode',
+			'attendee_list_demo_shortcode_script_vars',
+			[
+				'ajaxurl'               => admin_url( 'admin-ajax.php' ),
+				'rest_endpoint'         => [
+					'base'   => get_rest_url(),
+					'events' => tribe_events_rest_url( '/events' ),
+					'tags'   => get_rest_url( null, '/wp/v2/tags' ),
+				],
+				'nonce'                 => wp_create_nonce( 'wp_rest' ),
+			]
+		);
+
+		// Set up translations for the script
+		wp_set_script_translations( 'sdokus-attendee-list-demo-shortcode', 'sdokus-demo-attendee-list' );
 	}
 
 	/**
@@ -44,10 +83,10 @@ class Attendee_List extends Singleton_Abstract {
 	 * @return string
 	 */
 	public function get_output(): string {
-		$this->register_assets();
+		$this->enqueue_assets();
 		ob_start();
 		?>
-			<div>
+			<div class="test">
 				<p>
 					TESTING TESTING 123
 				</p>
