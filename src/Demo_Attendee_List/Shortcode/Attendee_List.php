@@ -64,8 +64,8 @@ class Attendee_List extends Singleton_Abstract {
 				'ajaxurl'               => admin_url( 'admin-ajax.php' ),
 				'rest_endpoint'         => [
 					'base'   => get_rest_url(),
-					'events' => tribe_events_rest_url( '/events' ),
-					'tags'   => get_rest_url( null, '/wp/v2/tags' ),
+					'tickets' => tribe_events_rest_url( '/tickets' ),
+					'attendees'   => get_rest_url( null, '/wp/v1/attendees' ),
 				],
 				'nonce'                 => wp_create_nonce( 'wp_rest' ),
 			]
@@ -90,6 +90,10 @@ class Attendee_List extends Singleton_Abstract {
 				<p>
 					TESTING TESTING 123
 				</p>
+                <div class="attendee-list">
+                    <!-- Attendee items will be dynamically appended here -->
+                    Placeholder.
+                </div>
 			</div>
 		<?php
 		return ob_get_clean();
