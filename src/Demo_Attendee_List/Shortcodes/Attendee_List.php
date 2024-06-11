@@ -1,6 +1,6 @@
 <?php
 
-namespace Sdokus\Demo_Attendee_List\Shortcode;
+namespace Sdokus\Demo_Attendee_List\Shortcodes;
 
 use Sdokus\Demo_Attendee_List\Singleton_Abstract;
 use Sdokus\Demo_Attendee_List\Plugin;
@@ -12,13 +12,39 @@ use Sdokus\Demo_Attendee_List\Plugin;
  *
  * @package Sdokus\Demo_Attendee_List\Shortcode
  */
-class Attendee_List extends Singleton_Abstract {
-	/**
-	 * @inheritDoc
-	 */
-	protected function register(): void {
-		add_shortcode( 'demo_attendee_list', [ $this, 'get_output'] );
-		add_action( 'init', [ $this, 'register_assets' ] );
+class Attendee_List implements Shortcode_Interface {
+	protected static array $instances = [];
+
+	protected array $attributes = [];
+
+	protected string $content = '';
+
+	public static function get_wp_slug(): string {
+		return 'demo_attendee_list';
+	}
+
+	protected function supported_attributes(): array {
+		return [
+			'id',
+		];
+	}
+
+    public static function make_for_wp( array $attributes, string $content = '' ): string {
+		$instance = new static()
+		$instance->set_attributes( $attributes );
+		$instance->set_content( $content );
+
+		static::$instances[] = $instance;
+
+		return $instance->output();
+	}
+
+	protected function set_attributes( array $attributes ): void {
+		$this->attributes = shortcode_atts( $this->supported_attributes(), $attributes, static::get_wp_slug() );
+	}
+
+	protected function set_content( string $content = '' ): void {
+		$this->content = $content;
 	}
 
 	/**
@@ -53,6 +79,8 @@ class Attendee_List extends Singleton_Abstract {
 	 * @return void
 	 */
 	protected function enqueue_assets(): void {
+		$this->attributes['id']
+
 		wp_enqueue_script( 'sdokus-attendee-list-demo-shortcode' );
         wp_enqueue_style( 'sdokus-attendee-list-demo-shortcode-style' );
 
@@ -82,11 +110,11 @@ class Attendee_List extends Singleton_Abstract {
 	 *
 	 * @return string
 	 */
-	public function get_output(): string {
+	public function output(): string {
 		$this->enqueue_assets();
 		ob_start();
 		?>
-			<div class="test">
+			<div class="test" data-id="<?php echo esc_attr( $this->attributes['id'] ); ?>">
 				<p>
 					TESTING TESTING 123
 				</p>
