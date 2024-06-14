@@ -121,6 +121,7 @@ class Plugin {
 	 * @return void
 	 */
 	public function load(): void {
-		Shortcode\Attendee_List::get_instance();
+		// Load the shortcodes controller
+		Shortcodes\Controller::get_instance();
 	}
 }
