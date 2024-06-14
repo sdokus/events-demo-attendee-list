@@ -154,11 +154,14 @@ class Attendee_List implements Shortcode_Interface {
 				'rest_endpoint'         => [
 					'base'     => get_rest_url(),
 					'tickets'  => tribe_events_rest_url('/tickets'),
-					'attendees'=> get_rest_url(null, '/wp/v1/attendees'),
+					'attendees'=> get_rest_url(null, 'tickets/v1/attendees'),
 				],
 				'nonce'                 => wp_create_nonce('wp_rest'),
-				'username'              => getenv('API_USERNAME'),
-				'password'              => getenv('API_PASSWORD'),
+                'attendee_labels' => [
+                    'email' => esc_html__('Email: ', 'sdokus-ajax-inspector'),
+                    'ticket_name' => esc_html__('Ticket Purchased: ', 'sdokus-ajax-inspector'),
+                    'ticket_cost' => esc_html__('Ticket Cost: $', 'sdokus-ajax-inspector'),
+                ],
 			]
 		);
 
@@ -178,12 +181,11 @@ class Attendee_List implements Shortcode_Interface {
 		ob_start();
 		?>
         <div class="test" data-id="<?php echo esc_attr( $this->attributes['id'] ); ?>">
-            <p>
-                TESTING TESTING 123
-            </p>
+            <h2>
+                All Attendees
+            </h2>
             <div class="attendee-list">
                 <!-- Attendee items will be dynamically appended here -->
-                Placeholder.
             </div>
         </div>
 		<?php
