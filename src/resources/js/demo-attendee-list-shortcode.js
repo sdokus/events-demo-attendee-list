@@ -16,7 +16,8 @@ jQuery(document).ready(function($) {
 		type: 'GET',
 		dataType: 'json',
 		headers: {
-			'Authorization': basicAuth
+			'Authorization': basicAuth,
+			'X-WP-Nonce': attendee_list_demo_shortcode_script_vars.nonce,
 		},
 		success: function(response) {
 			if (response && response.attendees && response.attendees.length > 0) {

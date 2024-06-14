@@ -54,7 +54,7 @@ class Attendee_List implements Shortcode_Interface {
 	 */
 	protected function supported_attributes(): array {
 		return [
-			'id',
+			'id' => '',
 		];
 	}
 
@@ -145,20 +145,22 @@ class Attendee_List implements Shortcode_Interface {
 		wp_enqueue_script( 'sdokus-attendee-list-demo-shortcode' );
 		wp_enqueue_style( 'sdokus-attendee-list-demo-shortcode-style' );
 
-//		// Localize script with nonce to MyAjax object
-//		wp_localize_script(
-//			'sdokus-attendee-list-demo-shortcode',
-//			'attendee_list_demo_shortcode_script_vars',
-//			[
-//				'ajaxurl'       => admin_url( 'admin-ajax.php' ),
-//				'rest_endpoint' => [
-//					'base'      => get_rest_url(),
-//					'tickets'   => tribe_events_rest_url( '/tickets' ),
-//					'attendees' => get_rest_url( null, '/wp/v1/attendees' ),
-//				],
-//				'nonce'         => wp_create_nonce( 'wp_rest' ),
-//			]
-//		);
+		// Localize script with nonce to MyAjax object
+		wp_localize_script(
+			'sdokus-attendee-list-demo-shortcode',
+			'attendee_list_demo_shortcode_script_vars',
+			[
+				'ajaxurl'               => admin_url('admin-ajax.php'),
+				'rest_endpoint'         => [
+					'base'     => get_rest_url(),
+					'tickets'  => tribe_events_rest_url('/tickets'),
+					'attendees'=> get_rest_url(null, '/wp/v1/attendees'),
+				],
+				'nonce'                 => wp_create_nonce('wp_rest'),
+				'username'              => getenv('API_USERNAME'),
+				'password'              => getenv('API_PASSWORD'),
+			]
+		);
 
 		// Set up translations for the script
 		wp_set_script_translations( 'sdokus-attendee-list-demo-shortcode', 'sdokus-demo-attendee-list' );
