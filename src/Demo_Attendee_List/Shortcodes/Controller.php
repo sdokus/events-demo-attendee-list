@@ -28,6 +28,6 @@ class Controller extends Singleton_Abstract {
 		add_shortcode( Attendee_List::get_wp_slug(), [ Attendee_List::class, 'make_for_wp' ] );
 
 		// Register assets for the attendee list
-		add_action( 'init', [ Attendee_List::class, 'register_assets' ] );
+		Attendee_List::register_assets();
 	}
 }

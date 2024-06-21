@@ -109,64 +109,63 @@ class Attendee_List implements Shortcode_Interface {
 	}
 
 	/**
-	 * Registers the assets for the Attendee List Shortcode.
+	 * Registers the assets for the Attendee List Shortcode using `tribe_asset()`.
+	 *
+	 *  This function requires the StellarWP/Assets library to be installed and included in the project.
+	 *  The StellarWP/Assets library provides a robust and flexible way to manage assets with extended
+	 *  functionalities such as conditional loading, localization, and advanced script attributes.
+	 *
+	 *  This plugin is booted on 'tribe_tickets_plugin_loaded' to ensure that the StellarWP/Assets library
+	 *  is available and initialized before assets are registered.
+	 *
+	 *  Benefits of using `tribe_asset()`:
+	 *  - **Advanced Flexibility**: Allows detailed control over asset behavior, including localization,
+	 *    conditionals, and custom attributes.
+	 *  - **Localization**: Simplifies the process of localizing scripts with dynamic data.
+	 *  - **Conditional Loading**: Supports conditionally loading assets based on various criteria.
+	 *  - **Integration**: Seamlessly integrates with StellarWP products and other Tribe plugins.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return void
 	 */
 	public static function register_assets(): void {
-		wp_register_style(
+		tribe_asset(
+			Plugin::get_instance(),
 			'sdokus-attendee-list-demo-shortcode-style',
-			Plugin::get_instance()->plugin_url . 'src/resources/css/demo-attendee-list-shortcode.css',
+			'demo-attendee-list-shortcode.css',
 			[],
-			Plugin::VERSION
+			'sdokus_demo_attendee_list_shortcode_before_output'
 		);
 
-		wp_register_script(
+		tribe_asset(
+			Plugin::get_instance(),
 			'sdokus-attendee-list-demo-shortcode',
-			Plugin::get_instance()->plugin_url . 'src/resources/js/demo-attendee-list-shortcode.js',
+			'demo-attendee-list-shortcode.js',
 			[ 'jquery', 'wp-i18n' ],
-			Plugin::VERSION,
-			true
-		);
-	}
-
-	/**
-	 * Enqueues the assets for the Attendee List Demo Shortcode style and functionality.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	protected function enqueue_assets(): void {
-		// $this->attributes['id'];
-
-		wp_enqueue_script( 'sdokus-attendee-list-demo-shortcode' );
-		wp_enqueue_style( 'sdokus-attendee-list-demo-shortcode-style' );
-
-		// Localize script with nonce to MyAjax object
-		wp_localize_script(
-			'sdokus-attendee-list-demo-shortcode',
-			'attendee_list_demo_shortcode_script_vars',
+			'sdokus_demo_attendee_list_shortcode_before_output',
 			[
-				'ajaxurl'               => admin_url('admin-ajax.php'),
-				'rest_endpoint'         => [
-					'base'     => get_rest_url(),
-					'tickets'  => tribe_events_rest_url('/tickets'),
-					'attendees'=> get_rest_url(null, 'tickets/v1/attendees'),
+				'localize' => [
+					'name' => 'attendee_list_demo_shortcode_script_vars',
+					'data' => static function () {
+						return [
+							'ajaxurl'         => admin_url( 'admin-ajax.php' ),
+							'rest_endpoint'   => [
+								'base'      => get_rest_url(),
+								'tickets'   => tribe_events_rest_url( '/tickets' ),
+								'attendees' => get_rest_url( null, 'tickets/v1/attendees' ),
+							],
+							'nonce'           => wp_create_nonce( 'wp_rest' ),
+							'attendee_labels' => [
+								'email'       => esc_html__( 'Email: ', 'sdokus-ajax-inspector' ),
+								'ticket_name' => esc_html__( 'Ticket Purchased: ', 'sdokus-ajax-inspector' ),
+								'ticket_cost' => esc_html__( 'Ticket Cost: $', 'sdokus-ajax-inspector' ),
+							],
+						];
+					},
 				],
-				'nonce'                 => wp_create_nonce('wp_rest'),
-                'attendee_labels' => [
-                    'email' => esc_html__('Email: ', 'sdokus-ajax-inspector'),
-                    'ticket_name' => esc_html__('Ticket Purchased: ', 'sdokus-ajax-inspector'),
-                    'ticket_cost' => esc_html__('Ticket Cost: $', 'sdokus-ajax-inspector'),
-                ],
 			]
 		);
-
-		// Set up translations for the script
-		wp_set_script_translations( 'sdokus-attendee-list-demo-shortcode', 'sdokus-demo-attendee-list' );
 	}
 
 	/**
@@ -177,7 +176,10 @@ class Attendee_List implements Shortcode_Interface {
 	 * @return string
 	 */
 	public function output(): string {
-		$this->enqueue_assets();
+		// Action to enqueue the assets on.
+		do_action( 'sdokus_demo_attendee_list_shortcode_before_output', $this );
+
+		// @todo - Move this to a template.
 		ob_start();
 		?>
         <div class="test" data-id="<?php echo esc_attr( $this->attributes['id'] ); ?>">
