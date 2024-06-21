@@ -4,43 +4,49 @@
  *  @since 1.0.0
  */
 jQuery(document).ready(function($) {
-	// Encode username and password for basic authentication. This is just for testing that authentication is working,
-	// eventually this will be changed to a dynamic call for the current user.
-	var username = 'sam';
-	var password = 'pass';
-	var basicAuth = 'Basic ' + btoa(username + ':' + password);
+	const { rest_endpoint, nonce, error_message, no_attendee_message, attendee_labels } = attendee_list_demo_shortcode_script_vars;
 
-	// Ajax call to fetch attendee data
+	// Construct the attendees endpoint URL
+	let attendeesEndpoint = rest_endpoint.base + 'tribe/tickets/v1/attendees/';
+
+	// Ajax call to fetch attendee data if the user is logged in.
 	$.ajax({
-		url: 'https://stable.dev.lndo.site/wp-json/tribe/tickets/v1/attendees/',
+		url: attendeesEndpoint,
 		type: 'GET',
 		dataType: 'json',
 		headers: {
-			'Authorization': basicAuth
+			'X-WP-Nonce': nonce,
 		},
-		success: function(response) {
-			if (response && response.attendees && response.attendees.length > 0) {
-				// Iterate through each attendee and append to the attendee list
-				$.each(response.attendees, function(index, attendee) {
-					var attendeeHTML = '<div class="attendee">' +
-						'<div class="attendee-avatar">' +
-						'<img src="avatar.jpg" alt="Attendee Avatar">' +
-						'</div>' +
-						'<div class="attendee-details">' +
-						'<h3 class="attendee-name">' + attendee.title + '</h3>' +
-						'<p class="attendee-email">' + attendee.email + '</p>' +
-						'<p class="attendee-role">Role: ' + attendee.ticket.title + '</p>' +
-						'</div>' +
-						'</div>';
-
-					$('.attendee-list').append(attendeeHTML);
-				});
-			} else {
-				console.log('No attendees found.');
-			}
-		},
+		success: renderAttendees,
 		error: function(xhr, status, error) {
-			console.error('Error fetching attendees:', error);
+			$('.attendee-list').append( error_message, error);
 		}
 	});
+
+	// Function to render attendees based on response
+	function renderAttendees(response) {
+		if (response && response.attendees && response.attendees.length > 0) {
+			// Clear existing content before appending new content
+			$('.attendee-list').empty();
+
+			// Iterate through each attendee and append to the attendee list
+			$.each(response.attendees, function(index, attendee) {
+				let attendeeHTML = `<div class="attendee">
+					<div class="attendee-details">
+						<h3 class="attendee-name">${attendee.title}</h3>
+						<ul>
+							<li class="attendee-email">${attendee_labels.email} ${attendee.email}</li>
+							<li class="attendee-ticket-name">${attendee_labels.ticket_name} ${attendee.ticket.title}</li>
+							<li class="attendee-ticket-cost">${attendee_labels.ticket_cost} ${attendee.ticket.formatted_price}</li>
+						</ul>
+					</div>
+				</div>`;
+
+
+				$('.attendee-list').append(attendeeHTML);
+			});
+		} else {
+			$('.attendee-list').append( no_attendee_message);
+		}
+	}
 });

@@ -16,7 +16,8 @@ use Sdokus\Demo_Attendee_List\Plugin;
  * @since 1.0.0
  */
 add_action(
-	'plugins_loaded',
+	// Hook when Event Tickets is loaded to ensure we have `tribe_assets` available
+	'tribe_tickets_plugin_loaded',
 	static function () {
 		// Load Composer autoload file.
 		require_once __DIR__ . '/vendor/autoload.php';
