@@ -4,13 +4,14 @@ namespace Sdokus\Demo_Attendee_List\Shortcodes;
 
 use Sdokus\Demo_Attendee_List\Singleton_Abstract;
 use Sdokus\Demo_Attendee_List\Plugin;
+use Sdokus\Demo_Attendee_List\Templates\Attendee_List_Template;
 
 /**
  * Class Attendee_List Shortcode.
  *
  * @since   1.0.0
  *
- * @package Sdokus\Demo_Attendee_List\Shortcode
+ * @package Sdokus\Demo_Attendee_List\Shortcodes
  */
 class Attendee_List implements Shortcode_Interface {
 	/**
@@ -185,18 +186,7 @@ class Attendee_List implements Shortcode_Interface {
 		 */
 		do_action( 'sdokus_demo_attendee_list_shortcode_before_output', $this );
 
-		// @todo - Move this to a template.
-		ob_start();
-		?>
-        <div class="test" data-id="<?php echo esc_attr( $this->attributes['id'] ); ?>">
-            <h2>
-	            <?php __('All Attendees', 'sdokus-demo-attendee-list'); ?>
-            </h2>
-            <div class="attendee-list">
-                <!-- Attendee items will be dynamically appended here -->
-            </div>
-        </div>
-		<?php
-		return ob_get_clean();
+		// Render the template using Attendee_List_Template class
+		return Attendee_List_Template::render( $this->attributes, $this->content );
 	}
 }

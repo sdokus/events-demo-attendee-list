@@ -33,14 +33,15 @@ jQuery(document).ready(function($) {
 			$.each(response.attendees, function(index, attendee) {
 				let attendeeHTML = `<div class="attendee">
 					<div class="attendee-details">
-					<h3 class="attendee-name"> attendee.title </h3>
-					<ul>
-					<li class="attendee-email"> attendee_labels.email attendee.email </li>
-					<li class="attendee-ticket-name"> attendee_labels.ticket_name + attendee.ticket.title </li>
-					<li class="attendee-ticket-cost"> attendee_labels.ticket_cost + attendee.ticket.formatted_price </li>
-					</ul>
+						<h3 class="attendee-name">${attendee.title}</h3>
+						<ul>
+							<li class="attendee-email">${attendee_labels.email} ${attendee.email}</li>
+							<li class="attendee-ticket-name">${attendee_labels.ticket_name} ${attendee.ticket.title}</li>
+							<li class="attendee-ticket-cost">${attendee_labels.ticket_cost} ${attendee.ticket.formatted_price}</li>
+						</ul>
 					</div>
-					</div>`;
+				</div>`;
+
 
 				$('.attendee-list').append(attendeeHTML);
 			});

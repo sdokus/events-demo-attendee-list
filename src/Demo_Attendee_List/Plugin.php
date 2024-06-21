@@ -123,5 +123,7 @@ class Plugin {
 	public function load(): void {
 		// Load the shortcodes controller
 		Shortcodes\Controller::get_instance();
+
+		require_once $this->plugin_path . 'src/views/Attendee_List_Template.php';
 	}
 }
