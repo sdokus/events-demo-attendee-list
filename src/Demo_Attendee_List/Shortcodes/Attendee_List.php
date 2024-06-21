@@ -156,10 +156,12 @@ class Attendee_List implements Shortcode_Interface {
 								'attendees' => get_rest_url( null, 'tickets/v1/attendees' ),
 							],
 							'nonce'           => wp_create_nonce( 'wp_rest' ),
-							'attendee_labels' => [
-								'email'       => esc_html__( 'Email: ', 'sdokus-ajax-inspector' ),
-								'ticket_name' => esc_html__( 'Ticket Purchased: ', 'sdokus-ajax-inspector' ),
-								'ticket_cost' => esc_html__( 'Ticket Cost: $', 'sdokus-ajax-inspector' ),
+							'error_message' => esc_html__('Error fetching attendees:', 'sdokus-demo-attendee-list' ),
+							'no_attendee_message' => esc_html__('No attendees found.', 'sdokus-demo-attendee-list' ),
+                            'attendee_labels' => [
+								'email'       => esc_html__( 'Email: ', 'sdokus-demo-attendee-list' ),
+								'ticket_name' => esc_html__( 'Ticket Purchased: ', 'sdokus-demo-attendee-list' ),
+								'ticket_cost' => esc_html__( 'Ticket Cost: $', 'sdokus-demo-attendee-list' ),
 							],
 						];
 					},
@@ -176,7 +178,11 @@ class Attendee_List implements Shortcode_Interface {
 	 * @return string
 	 */
 	public function output(): string {
-		// Action to enqueue the assets on.
+		/*
+		 * Action that the assets are enqueued on. Allows developers to unload assets.
+		 *
+		 * @since 1.0.0
+		 */
 		do_action( 'sdokus_demo_attendee_list_shortcode_before_output', $this );
 
 		// @todo - Move this to a template.
@@ -184,7 +190,7 @@ class Attendee_List implements Shortcode_Interface {
 		?>
         <div class="test" data-id="<?php echo esc_attr( $this->attributes['id'] ); ?>">
             <h2>
-                All Attendees
+	            <?php __('All Attendees', 'sdokus-demo-attendee-list'); ?>
             </h2>
             <div class="attendee-list">
                 <!-- Attendee items will be dynamically appended here -->

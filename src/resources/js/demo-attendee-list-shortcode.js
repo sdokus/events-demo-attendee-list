@@ -4,8 +4,10 @@
  *  @since 1.0.0
  */
 jQuery(document).ready(function($) {
+	const { rest_endpoint, nonce, error_message, no_attendee_message, attendee_labels } = attendee_list_demo_shortcode_script_vars;
+
 	// Construct the attendees endpoint URL
-	var attendeesEndpoint = attendee_list_demo_shortcode_script_vars.rest_endpoint.base + 'tribe/tickets/v1/attendees/';
+	let attendeesEndpoint = rest_endpoint.base + 'tribe/tickets/v1/attendees/';
 
 	// Ajax call to fetch attendee data if the user is logged in.
 	$.ajax({
@@ -13,11 +15,11 @@ jQuery(document).ready(function($) {
 		type: 'GET',
 		dataType: 'json',
 		headers: {
-			'X-WP-Nonce': attendee_list_demo_shortcode_script_vars.nonce,
+			'X-WP-Nonce': nonce,
 		},
 		success: renderAttendees,
 		error: function(xhr, status, error) {
-			$('.attendee-list').append('Error fetching attendees:', error);
+			$('.attendee-list').append( error_message, error);
 		}
 	});
 
@@ -29,21 +31,21 @@ jQuery(document).ready(function($) {
 
 			// Iterate through each attendee and append to the attendee list
 			$.each(response.attendees, function(index, attendee) {
-				var attendeeHTML = '<div class="attendee">' +
-					'<div class="attendee-details">' +
-					'<h3 class="attendee-name">' + attendee.title + '</h3>' +
-					'<ul>'+
-					'<li class="attendee-email">' + attendee_list_demo_shortcode_script_vars.attendee_labels.email + attendee.email + '</li>' +
-					'<li class="attendee-ticket-name">' + attendee_list_demo_shortcode_script_vars.attendee_labels.ticket_name + attendee.ticket.title + '</li>' +
-					'<li class="attendee-ticket-cost">' + attendee_list_demo_shortcode_script_vars.attendee_labels.ticket_cost + attendee.ticket.formatted_price + '</li>' +
-					'</ul>' +
-					'</div>' +
-					'</div>';
+				let attendeeHTML = `<div class="attendee">
+					<div class="attendee-details">
+					<h3 class="attendee-name"> attendee.title </h3>
+					<ul>
+					<li class="attendee-email"> attendee_labels.email attendee.email </li>
+					<li class="attendee-ticket-name"> attendee_labels.ticket_name + attendee.ticket.title </li>
+					<li class="attendee-ticket-cost"> attendee_labels.ticket_cost + attendee.ticket.formatted_price </li>
+					</ul>
+					</div>
+					</div>`;
 
 				$('.attendee-list').append(attendeeHTML);
 			});
 		} else {
-			$('.attendee-list').append('No attendees found.');
+			$('.attendee-list').append( no_attendee_message);
 		}
 	}
 });
