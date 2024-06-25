@@ -149,16 +149,16 @@ class Attendee_List implements Shortcode_Interface {
 					'name' => 'attendee_list_demo_shortcode_script_vars',
 					'data' => static function () {
 						return [
-							'ajaxurl'         => admin_url( 'admin-ajax.php' ),
-							'rest_endpoint'   => [
+							'ajaxurl'             => admin_url( 'admin-ajax.php' ),
+							'rest_endpoint'       => [
 								'base'      => get_rest_url(),
 								'tickets'   => tribe_events_rest_url( '/tickets' ),
 								'attendees' => get_rest_url( null, 'tickets/v1/attendees' ),
 							],
-							'nonce'           => wp_create_nonce( 'wp_rest' ),
-							'error_message' => esc_html__('Error fetching attendees:', 'sdokus-demo-attendee-list' ),
-							'no_attendee_message' => esc_html__('No attendees found.', 'sdokus-demo-attendee-list' ),
-                            'attendee_labels' => [
+							'nonce'               => wp_create_nonce( 'wp_rest' ),
+							'error_message'       => esc_html__( 'Error fetching attendees:', 'sdokus-demo-attendee-list' ),
+							'no_attendee_message' => esc_html__( 'No attendees found.', 'sdokus-demo-attendee-list' ),
+							'attendee_labels'     => [
 								'email'       => esc_html__( 'Email: ', 'sdokus-demo-attendee-list' ),
 								'ticket_name' => esc_html__( 'Ticket Purchased: ', 'sdokus-demo-attendee-list' ),
 								'ticket_cost' => esc_html__( 'Ticket Cost: $', 'sdokus-demo-attendee-list' ),
@@ -190,7 +190,7 @@ class Attendee_List implements Shortcode_Interface {
 		?>
         <div class="test" data-id="<?php echo esc_attr( $this->attributes['id'] ); ?>">
             <h2>
-	            <?php __('All Attendees', 'sdokus-demo-attendee-list'); ?>
+				<?php __( 'All Attendees', 'sdokus-demo-attendee-list' ); ?>
             </h2>
             <div class="attendee-list">
                 <!-- Attendee items will be dynamically appended here -->

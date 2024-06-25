@@ -44,5 +44,5 @@ abstract class Singleton_Abstract {
 	 *
 	 * @return void
 	 */
-	abstract protected function register(): void ;
+	abstract protected function register(): void;
 }
