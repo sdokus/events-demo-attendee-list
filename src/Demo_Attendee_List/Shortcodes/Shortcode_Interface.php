@@ -7,7 +7,7 @@ namespace Sdokus\Demo_Attendee_List\Shortcodes;
  *
  * Defines the structure for shortcodes in the Demo Attendee List plugin.
  *
- * @since 1.0.0
+ * @since   1.0.0
  *
  * @package Sdokus\Demo_Attendee_List\Shortcodes
  */
